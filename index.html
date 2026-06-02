@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositório W.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-100 font-sans text-slate-800 pb-20 md:pb-8">
+
+    <!-- Cabeçalho -->
+    <header class="bg-neutral-900 shadow-md sticky top-0 z-20">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-row items-center justify-between">
+            <div class="flex items-center space-x-3 text-white">
+                <!-- Ícone / Brasão Adicionado Aqui -->
+                <div class="flex-shrink-0 bg-neutral-800 rounded-full p-0.5 shadow-inner border border-neutral-700">
+                    <img src="./204913.png" alt="Brasão WF" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIycy04LTQuNS04LTExLjhWNWw4LTMgOCAzdjUuMmMwIDcuMy04IDExLjgtOCAxMS44eiIvPjwvc3ZnPg=='">
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-lg md:text-xl font-bold tracking-tight md:tracking-wide">Repositório W.</h1>
+                    <p class="text-neutral-400 text-[10px] md:text-xs font-medium uppercase tracking-wider hidden sm:block">
+                        Coordenação de Suporte e Logística
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button id="btnInstallApp" class="hidden items-center space-x-1 text-xs bg-white text-neutral-900 px-3 py-1.5 rounded-full font-bold shadow hover:bg-neutral-200 transition">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                    <span class="hidden md:inline">Instalar App</span>
+                    <span class="md:hidden">Instalar</span>
+                </button>
+                <div class="text-right">
+                    <p class="text-[10px] text-neutral-400 uppercase tracking-wider">Matrícula</p>
+                    <p class="font-mono text-sm md:text-base font-bold text-white">6470561</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-2 md:px-4 py-4 md:py-8 space-y-4">
+        
+        <!-- Aviso de Erro -->
+        <div id="errorAlert" class="hidden bg-red-50 border border-red-200 p-3 md:p-4 rounded-xl shadow-sm flex items-start space-x-3 animate-pulse">
+            <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            <div id="errorMessage" class="flex-1 text-red-700 text-sm font-medium"></div>
+            <button onclick="document.getElementById('errorAlert').classList.add('hidden')" class="text-red-400 hover:text-red-600 font-bold text-xl leading-none">&times;</button>
+        </div>
+
+        <!-- Barra de Ferramentas -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 md:p-4 flex flex-col md:flex-row gap-3 justify-between items-center sticky top-[60px] md:static z-10">
+            <div class="relative w-full md:w-80">
+                <svg class="w-4 h-4 md:w-5 md:h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="searchInput" placeholder="Buscar arquivos no drive..." class="w-full pl-9 md:pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-all w-full" />
+            </div>
+
+            <div class="w-full md:w-auto">
+                <input type="file" id="fileInput" class="hidden" />
+                <label id="uploadLabel" for="fileInput" class="flex justify-center items-center space-x-2 w-full md:w-auto px-5 py-3 md:py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm bg-neutral-800 text-white hover:bg-black cursor-pointer active:scale-95">
+                    <svg id="uploadIconDefault" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+                    <svg id="uploadIconLoading" class="w-5 h-5 animate-spin hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>
+                    <span id="uploadText">Enviar Arquivo (Até 15MB)</span>
+                </label>
+                <div id="progressContainer" class="w-full bg-slate-200 rounded-full h-1.5 mt-2 overflow-hidden hidden">
+                    <div id="progressBar" class="bg-neutral-600 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Arquivos -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+            <div class="hidden md:grid grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200 text-xs uppercase font-bold text-slate-500 tracking-wider">
+                <div class="col-span-6 lg:col-span-7">Nome do Arquivo</div>
+                <div class="col-span-2 text-center">Tamanho</div>
+                <div class="col-span-2 text-center">Data</div>
+                <div class="col-span-2 lg:col-span-1 text-center">Ações</div>
+            </div>
+            <div id="fileList" class="divide-y divide-slate-100">
+                <div class="p-12 text-center text-slate-400 flex flex-col items-center">
+                    <svg class="w-16 h-16 text-slate-200 mb-3 animate-pulse" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
+                    <p class="font-medium text-lg text-slate-500">Conectando ao banco...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpyk0JG7aDRHCcgazome2qdCwr9J_2iO8",
+            authDomain: "repositoriow.firebaseapp.com",
+            projectId: "repositoriow",
+            storageBucket: "repositoriow.firebasestorage.app",
+            messagingSenderId: "912816806782",
+            appId: "1:912816806782:web:95fca5c2f7d9aa8422712f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appIdString = "semcas-drive-v3"; 
+        const CHUNK_SIZE = 800 * 1000; 
+        const MAX_FILE_SIZE = 15 * 1024 * 1024;
+
+        let currentUser = null, allFiles = [], searchTerm = '', isUploading = false;
+        let downloadingIds = new Set();
+        let deferredPrompt;
+
+        const elFileList = document.getElementById('fileList');
+        const elSearch = document.getElementById('searchInput');
+        const elFileInput = document.getElementById('fileInput');
+        const elErrorAlert = document.getElementById('errorAlert');
+        const elErrorMessage = document.getElementById('errorMessage');
+        const elBtnInstall = document.getElementById('btnInstallApp');
+
+        const icons = {
+            file: `<svg class="w-8 h-8 md:w-6 md:h-6 text-neutral-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>`,
+            image: `<svg class="w-8 h-8 md:w-6 md:h-6 text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>`,
+            pdf: `<svg class="w-8 h-8 md:w-6 md:h-6 text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8v6"/><path d="M10 12H8"/><path d="M16 15v-6h-2v6z"/><path d="M13 15v-6h-1v6z"/></svg>`,
+            archive: `<svg class="w-8 h-8 md:w-6 md:h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12v-2"/><path d="M10 16v-2"/></svg>`,
+            download: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>`,
+            trash: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`,
+            spinner: `<svg class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>`
+        };
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024, sizes = ['B', 'KB', 'MB', 'GB'], i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function getFileIcon(type) {
+            if (!type) return icons.file;
+            if (type.includes('image')) return icons.image;
+            if (type.includes('pdf')) return icons.pdf;
+            if (type.includes('zip') || type.includes('rar')) return icons.archive;
+            return icons.file;
+        }
+
+        function showError(msg) {
+            elErrorMessage.textContent = msg;
+            elErrorAlert.classList.remove('hidden');
+            setTimeout(() => elErrorAlert.classList.add('hidden'), 8000);
+        }
+
+        function renderFiles() {
+            const filtered = allFiles.filter(f => f.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            if (allFiles.length === 0) {
+                elFileList.innerHTML = `<div class="p-12 text-center text-slate-400 flex flex-col items-center"><svg class="w-16 h-16 text-slate-200 mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg><p class="font-medium text-lg text-slate-500">Nenhum arquivo</p></div>`;
+                return;
+            }
+            if (filtered.length === 0) {
+                elFileList.innerHTML = `<div class="p-8 text-center text-slate-500 font-medium">Nenhum arquivo encontrado.</div>`;
+                return;
+            }
+            elFileList.innerHTML = filtered.map(file => {
+                const isDl = downloadingIds.has(file.id);
+                const dateStr = new Date(file.createdAt).toLocaleDateString('pt-BR');
+                return `
+                <div class="p-3 md:p-4 hover:bg-neutral-100/50 transition-colors group">
+                    <div class="hidden md:grid grid-cols-12 gap-4 items-center">
+                        <div class="col-span-6 lg:col-span-7 flex items-center space-x-3 overflow-hidden">
+                            <div class="p-2 bg-slate-100 rounded-lg">${getFileIcon(file.type)}</div>
+                            <p class="text-sm font-semibold text-slate-700 truncate">${file.name}</p>
+                        </div>
+                        <div class="col-span-2 text-center text-sm text-slate-500 font-medium">${formatBytes(file.size)}</div>
+                        <div class="col-span-2 text-center text-sm text-slate-500">${dateStr}</div>
+                        <div class="col-span-2 lg:col-span-1 flex justify-center space-x-2">
+                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="p-2 text-neutral-700 bg-neutral-100 rounded-lg hover:bg-neutral-200 disabled:opacity-50">${isDl ? icons.spinner : icons.download}</button>
+                            <button data-action="delete" data-id="${file.id}" class="p-2 text-red-500 bg-red-50 rounded-lg hover:bg-red-100">${icons.trash}</button>
+                        </div>
+                    </div>
+                    <div class="flex md:hidden flex-col space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="p-2.5 bg-slate-100 rounded-xl">${getFileIcon(file.type)}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold text-slate-800 break-all leading-tight mb-1">${file.name}</p>
+                                <div class="flex text-xs text-slate-500 font-medium space-x-2">
+                                    <span>${formatBytes(file.size)}</span><span>•</span><span>${dateStr}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 pt-1">
+                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="flex-1 flex justify-center items-center space-x-1.5 py-2.5 bg-neutral-100 text-neutral-800 rounded-lg font-bold text-sm disabled:opacity-50">${isDl ? icons.spinner + '<span>Baixando...</span>' : icons.download + '<span>Baixar</span>'}</button>
+                            <button data-action="delete" data-id="${file.id}" class="px-4 py-2.5 bg-red-50 text-red-600 rounded-lg flex items-center justify-center">${icons.trash}</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        elFileList.addEventListener('click', e => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const action = btn.dataset.action, file = allFiles.find(f => f.id === btn.dataset.id);
+            if (!file) return;
+            if (action === 'download') handleDownload(file);
+            else if (action === 'delete' && confirm(`Excluir "${file.name}"?`)) handleDelete(file);
+        });
+
+        elSearch.addEventListener('input', e => { searchTerm = e.target.value; renderFiles(); });
+        elFileInput.addEventListener('change', handleFileUpload);
+
+        async function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > MAX_FILE_SIZE) return showError(`Limite é 15MB. (${formatBytes(file.size)})`);
+            setUploadUI(true, 5);
+            const reader = new FileReader();
+            reader.onload = async event => {
+                const b64 = event.target.result, chunks = Math.ceil(b64.length / CHUNK_SIZE);
+                try {
+                    const ref = doc(collection(db, 'artifacts', appIdString, 'public', 'data', 'repository_files'));
+                    await setDoc(ref, { name: file.name, size: file.size, type: file.type, totalChunks: chunks, createdAt: new Date().toISOString(), uploaderId: currentUser.uid });
+                    for (let i = 0; i < chunks; i++) {
+                        await setDoc(doc(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', ref.id, 'chunks', String(i)), { index: i, data: b64.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE) });
+                        setUploadUI(true, Math.round(((i + 1) / chunks) * 100));
+                    }
+                } catch (err) { showError('Erro ao enviar.'); }
+                finally { setUploadUI(false); elFileInput.value = ''; }
+            };
+            reader.onerror = () => { showError('Erro na leitura.'); setUploadUI(false); elFileInput.value = ''; };
+            reader.readAsDataURL(file);
+        }
+
+        async function handleDownload(file) {
+            if (downloadingIds.has(file.id)) return;
+            downloadingIds.add(file.id); renderFiles();
+            try {
+                const snap = await getDocs(collection(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', file.id, 'chunks'));
+                const chunks = snap.docs.map(d => d.data()).sort((a, b) => a.index - b.index);
+                const link = document.createElement('a');
+                link.href = chunks.map(c => c.data).join(''); link.download = file.name;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            } catch (err) { showError(`Erro ao baixar "${file.name}".`); }
+            finally { downloadingIds.delete(file.id); renderFiles(); }
+        }
+
+        async function handleDelete(file) {
+            try {
+                for (let i = 0; i < file.totalChunks; i++) 
+                    await deleteDoc(doc(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', file.id, 'chunks', String(i)));
+                await deleteDoc(doc(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', file.id));
+            } catch (err) { showError('Erro ao excluir.'); }
+        }
+
+        function setUploadUI(up, prog = 0) {
+            const l = document.getElementById('uploadLabel'), p = document.getElementById('progressContainer');
+            if (up) {
+                l.className = "flex justify-center items-center space-x-2 w-full md:w-auto px-5 py-3 md:py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm bg-neutral-100 text-neutral-500 cursor-not-allowed";
+                document.getElementById('uploadIconDefault').classList.add('hidden');
+                document.getElementById('uploadIconLoading').classList.remove('hidden');
+                document.getElementById('uploadText').textContent = `Enviando... ${prog}%`;
+                p.classList.remove('hidden'); document.getElementById('progressBar').style.width = `${prog}%`;
+            } else {
+                l.className = "flex justify-center items-center space-x-2 w-full md:w-auto px-5 py-3 md:py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm bg-neutral-800 text-white hover:bg-black cursor-pointer active:scale-95";
+                document.getElementById('uploadIconDefault').classList.remove('hidden');
+                document.getElementById('uploadIconLoading').classList.add('hidden');
+                document.getElementById('uploadText').textContent = 'Enviar Arquivo (Até 15MB)';
+                p.classList.add('hidden'); document.getElementById('progressBar').style.width = '0%';
+            }
+        }
+
+        // ==========================================
+        // CONFIGURAÇÃO REFORÇADA DE PWA (INSTALAÇÃO)
+        // ==========================================
+        function setupPWA() {
+            try {
+                // Manifesto configurado para usar a sua imagem (204913.png)
+                const manifest = {
+                    name: "Repositório W.",
+                    short_name: "Repo W",
+                    start_url: ".",
+                    display: "standalone",
+                    background_color: "#171717",
+                    theme_color: "#171717",
+                    icons: [{ src: "./204913.png", sizes: "192x192 512x512", type: "image/png", purpose: "any maskable" }]
+                };
+                
+                // Injeta o Manifesto no HTML
+                const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+                const link = document.createElement('link');
+                link.rel = 'manifest';
+                link.href = URL.createObjectURL(manifestBlob);
+                document.head.appendChild(link);
+
+                // Injeta um Service Worker Mínimo (Necessário para PWA)
+                const swCode = `
+                    self.addEventListener('install', (e) => self.skipWaiting());
+                    self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+                    self.addEventListener('fetch', (e) => {});
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+                    .catch(err => console.log("Nota: O Service Worker requer um servidor web HTTP/HTTPS para rodar.", err));
+                }
+            } catch (e) {
+                console.log("Ambiente não suporta injeção de PWA.");
+            }
+
+            // Captura o evento nativo de Instalação (só dispara em servidores HTTPS ou localhost)
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); // Previne o comportamento padrão (mini-info bar)
+                deferredPrompt = e; // Guarda o evento
+                elBtnInstall.classList.remove('hidden');
+                elBtnInstall.classList.add('flex'); // Mostra o botão no cabeçalho
+            });
+
+            // Quando clica no botão "Instalar App"
+            elBtnInstall.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt(); // Mostra o pop-up nativo de instalação
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        elBtnInstall.classList.add('hidden'); // Esconde se foi aceito
+                        elBtnInstall.classList.remove('flex');
+                    }
+                    deferredPrompt = null;
+                }
+            });
+        }
+
+        async function initApp() {
+            setupPWA();
+            onAuthStateChanged(auth, user => {
+                currentUser = user;
+                if (user) {
+                    onSnapshot(collection(db, 'artifacts', appIdString, 'public', 'data', 'repository_files'), snap => {
+                        allFiles = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        renderFiles();
+                    }, () => showError("Erro de permissão no Firebase."));
+                }
+            });
+            try { await signInAnonymously(auth); } 
+            catch (err) { showError("Ative o login Anônimo no Firebase."); }
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
