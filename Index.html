@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -162,6 +162,117 @@
         // Ícones SVG Auxiliares
         const icons = {
             file: `<svg class="w-8 h-8 md:w-6 md:h-6 text-neutral-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>`,
-            image: `<svg class="w-8 h-8 md:w-6 md:h-6 text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0
+            image: `<svg class="w-8 h-8 md:w-6 md:h-6 text-neutral-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>`,
+            pdf: `<svg class="w-8 h-8 md:w-6 md:h-6 text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8v6"/><path d="M10 12H8"/><path d="M16 15v-6h-2v6z"/><path d="M13 15v-6h-1v6z"/></svg>`,
+            archive: `<svg class="w-8 h-8 md:w-6 md:h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12v-2"/><path d="M10 16v-2"/></svg>`,
+            download: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>`,
+            trash: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`,
+            spinner: `<svg class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>`
+        };
 
+        // Funções de formatação
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
 
+        function getFileIcon(type) {
+            if (!type) return icons.file;
+            if (type.includes('image')) return icons.image;
+            if (type.includes('pdf')) return icons.pdf;
+            if (type.includes('zip') || type.includes('rar')) return icons.archive;
+            return icons.file;
+        }
+
+        function showError(msg) {
+            elErrorMessage.textContent = msg;
+            elErrorAlert.classList.remove('hidden');
+            setTimeout(() => elErrorAlert.classList.add('hidden'), 8000);
+        }
+
+        // Renderização da Interface
+        function renderFiles() {
+            const filteredFiles = allFiles.filter(f => f.name.toLowerCase().includes(searchTerm.toLowerCase()));
+            
+            if (allFiles.length === 0) {
+                elFileList.innerHTML = `
+                    <div class="p-12 text-center text-slate-400 flex flex-col items-center">
+                        <svg class="w-16 h-16 text-slate-200 mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
+                        <p class="font-medium text-lg text-slate-500">Nenhum arquivo encontrado</p>
+                        <p class="text-sm mt-1">Conectado ao Firebase: "repositoriow"</p>
+                    </div>`;
+                return;
+            }
+
+            if (filteredFiles.length === 0) {
+                elFileList.innerHTML = `<div class="p-8 text-center text-slate-500 font-medium">Nenhum arquivo encontrado na busca.</div>`;
+                return;
+            }
+
+            elFileList.innerHTML = filteredFiles.map(file => {
+                const isDownloading = downloadingIds.has(file.id);
+                const dateStr = new Date(file.createdAt).toLocaleDateString('pt-BR');
+                
+                return `
+                <div class="p-3 md:p-4 hover:bg-neutral-100/50 transition-colors group">
+                    <!-- Desktop -->
+                    <div class="hidden md:grid grid-cols-12 gap-4 items-center">
+                        <div class="col-span-6 lg:col-span-7 flex items-center space-x-3 overflow-hidden">
+                            <div class="p-2 bg-slate-100 rounded-lg">${getFileIcon(file.type)}</div>
+                            <p class="text-sm font-semibold text-slate-700 truncate" title="${file.name}">${file.name}</p>
+                        </div>
+                        <div class="col-span-2 text-center text-sm text-slate-500 font-medium">${formatBytes(file.size)}</div>
+                        <div class="col-span-2 text-center text-sm text-slate-500">${dateStr}</div>
+                        <div class="col-span-2 lg:col-span-1 flex justify-center space-x-2">
+                            <button data-action="download" data-id="${file.id}" ${isDownloading ? 'disabled' : ''} class="p-2 text-neutral-700 bg-neutral-100 rounded-lg hover:bg-neutral-200 transition-colors disabled:opacity-50">
+                                ${isDownloading ? icons.spinner : icons.download}
+                            </button>
+                            <button data-action="delete" data-id="${file.id}" class="p-2 text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                                ${icons.trash}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Mobile -->
+                    <div class="flex md:hidden flex-col space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <div class="p-2.5 bg-slate-100 rounded-xl">${getFileIcon(file.type)}</div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold text-slate-800 break-all leading-tight mb-1">${file.name}</p>
+                                <div class="flex text-xs text-slate-500 font-medium space-x-2">
+                                    <span>${formatBytes(file.size)}</span>
+                                    <span>•</span>
+                                    <span>${dateStr}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 pt-1">
+                            <button data-action="download" data-id="${file.id}" ${isDownloading ? 'disabled' : ''} class="flex-1 flex justify-center items-center space-x-1.5 py-2.5 bg-neutral-100 text-neutral-800 rounded-lg font-bold text-sm active:bg-neutral-200 disabled:opacity-50">
+                                ${isDownloading ? icons.spinner + '<span>Baixando...</span>' : icons.download + '<span>Baixar</span>'}
+                            </button>
+                            <button data-action="delete" data-id="${file.id}" class="px-4 py-2.5 bg-red-50 text-red-600 rounded-lg active:bg-red-100 flex items-center justify-center">
+                                ${icons.trash}
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Delegação de Eventos (Botões da Lista)
+        elFileList.addEventListener('click', async (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            
+            const action = btn.dataset.action;
+            const fileId = btn.dataset.id;
+            const file = allFiles.find(f => f.id === fileId);
+            
+            if (!file) return;
+
+            if (action === 'download') {
+                handleDownload(file);
+            } else if (action === 'dele
