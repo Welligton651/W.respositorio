@@ -18,7 +18,6 @@
     <header class="bg-neutral-900 shadow-md sticky top-0 z-20">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-row items-center justify-between">
             <div class="flex items-center space-x-3 text-white">
-                <!-- Ícone / Brasão Adicionado Aqui -->
                 <div class="flex-shrink-0 bg-neutral-800 rounded-full p-0.5 shadow-inner border border-neutral-700">
                     <img src="./204913.png" alt="Brasão WF" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDIycy04LTQuNS04LTExLjhWNWw4LTMgOCAzdjUuMmMwIDcuMy04IDExLjgtOCAxMS44eiIvPjwvc3ZnPg=='">
                 </div>
@@ -36,7 +35,7 @@
                     <span class="hidden md:inline">Instalar App</span>
                     <span class="md:hidden">Instalar</span>
                 </button>
-                <div class="text-right">
+                <div class="text-right" id="userHeaderInfo">
                     <p class="text-[10px] text-neutral-400 uppercase tracking-wider">Matrícula</p>
                     <p class="font-mono text-sm md:text-base font-bold text-white">6470561</p>
                 </div>
@@ -44,8 +43,7 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-2 md:px-4 py-4 md:py-8 space-y-4">
-        
+    <main id="mainContent" class="max-w-6xl mx-auto px-2 md:px-4 py-4 md:py-8 space-y-4">
         <!-- Aviso de Erro -->
         <div id="errorAlert" class="hidden bg-red-50 border border-red-200 p-3 md:p-4 rounded-xl shadow-sm flex items-start space-x-3 animate-pulse">
             <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
@@ -76,10 +74,10 @@
         <!-- Lista de Arquivos -->
         <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
             <div class="hidden md:grid grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200 text-xs uppercase font-bold text-slate-500 tracking-wider">
-                <div class="col-span-6 lg:col-span-7">Nome do Arquivo</div>
+                <div class="col-span-6 lg:col-span-6">Nome do Arquivo</div>
                 <div class="col-span-2 text-center">Tamanho</div>
                 <div class="col-span-2 text-center">Data</div>
-                <div class="col-span-2 lg:col-span-1 text-center">Ações</div>
+                <div class="col-span-2 text-center">Ações</div>
             </div>
             <div id="fileList" class="divide-y divide-slate-100">
                 <div class="p-12 text-center text-slate-400 flex flex-col items-center">
@@ -93,7 +91,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDpyk0JG7aDRHCcgazome2qdCwr9J_2iO8",
@@ -129,6 +127,7 @@
             archive: `<svg class="w-8 h-8 md:w-6 md:h-6 text-yellow-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 12v-2"/><path d="M10 16v-2"/></svg>`,
             download: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>`,
             trash: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`,
+            share: `<svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>`,
             spinner: `<svg class="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>`
         };
 
@@ -147,12 +146,17 @@
         }
 
         function showError(msg) {
-            elErrorMessage.textContent = msg;
-            elErrorAlert.classList.remove('hidden');
-            setTimeout(() => elErrorAlert.classList.add('hidden'), 8000);
+            if(elErrorMessage) elErrorMessage.textContent = msg;
+            if(elErrorAlert) {
+                elErrorAlert.classList.remove('hidden');
+                setTimeout(() => elErrorAlert.classList.add('hidden'), 8000);
+            } else {
+                alert(msg);
+            }
         }
 
         function renderFiles() {
+            if(!elFileList) return;
             const filtered = allFiles.filter(f => f.name.toLowerCase().includes(searchTerm.toLowerCase()));
             if (allFiles.length === 0) {
                 elFileList.innerHTML = `<div class="p-12 text-center text-slate-400 flex flex-col items-center"><svg class="w-16 h-16 text-slate-200 mb-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg><p class="font-medium text-lg text-slate-500">Nenhum arquivo</p></div>`;
@@ -168,15 +172,16 @@
                 return `
                 <div class="p-3 md:p-4 hover:bg-neutral-100/50 transition-colors group">
                     <div class="hidden md:grid grid-cols-12 gap-4 items-center">
-                        <div class="col-span-6 lg:col-span-7 flex items-center space-x-3 overflow-hidden">
+                        <div class="col-span-6 lg:col-span-6 flex items-center space-x-3 overflow-hidden">
                             <div class="p-2 bg-slate-100 rounded-lg">${getFileIcon(file.type)}</div>
                             <p class="text-sm font-semibold text-slate-700 truncate">${file.name}</p>
                         </div>
                         <div class="col-span-2 text-center text-sm text-slate-500 font-medium">${formatBytes(file.size)}</div>
                         <div class="col-span-2 text-center text-sm text-slate-500">${dateStr}</div>
-                        <div class="col-span-2 lg:col-span-1 flex justify-center space-x-2">
-                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="p-2 text-neutral-700 bg-neutral-100 rounded-lg hover:bg-neutral-200 disabled:opacity-50">${isDl ? icons.spinner : icons.download}</button>
-                            <button data-action="delete" data-id="${file.id}" class="p-2 text-red-500 bg-red-50 rounded-lg hover:bg-red-100">${icons.trash}</button>
+                        <div class="col-span-2 flex justify-center space-x-2">
+                            <button data-action="share" data-id="${file.id}" class="p-2 text-blue-500 bg-blue-50 rounded-lg hover:bg-blue-100 transition" title="Compartilhar Link">${icons.share}</button>
+                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="p-2 text-neutral-700 bg-neutral-100 rounded-lg hover:bg-neutral-200 disabled:opacity-50 transition" title="Baixar">${isDl ? icons.spinner : icons.download}</button>
+                            <button data-action="delete" data-id="${file.id}" class="p-2 text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition" title="Excluir">${icons.trash}</button>
                         </div>
                     </div>
                     <div class="flex md:hidden flex-col space-y-3">
@@ -190,7 +195,8 @@
                             </div>
                         </div>
                         <div class="flex space-x-2 pt-1">
-                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="flex-1 flex justify-center items-center space-x-1.5 py-2.5 bg-neutral-100 text-neutral-800 rounded-lg font-bold text-sm disabled:opacity-50">${isDl ? icons.spinner + '<span>Baixando...</span>' : icons.download + '<span>Baixar</span>'}</button>
+                            <button data-action="share" data-id="${file.id}" class="px-4 py-2.5 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">${icons.share}</button>
+                            <button data-action="download" data-id="${file.id}" ${isDl ? 'disabled' : ''} class="flex-1 flex justify-center items-center space-x-1.5 py-2.5 bg-neutral-100 text-neutral-800 rounded-lg font-bold text-sm disabled:opacity-50">${isDl ? icons.spinner + '<span>...</span>' : icons.download + '<span>Baixar</span>'}</button>
                             <button data-action="delete" data-id="${file.id}" class="px-4 py-2.5 bg-red-50 text-red-600 rounded-lg flex items-center justify-center">${icons.trash}</button>
                         </div>
                     </div>
@@ -198,17 +204,34 @@
             }).join('');
         }
 
-        elFileList.addEventListener('click', e => {
-            const btn = e.target.closest('button');
-            if (!btn) return;
-            const action = btn.dataset.action, file = allFiles.find(f => f.id === btn.dataset.id);
-            if (!file) return;
-            if (action === 'download') handleDownload(file);
-            else if (action === 'delete' && confirm(`Excluir "${file.name}"?`)) handleDelete(file);
-        });
+        if(elFileList) {
+            elFileList.addEventListener('click', e => {
+                const btn = e.target.closest('button');
+                if (!btn) return;
+                const action = btn.dataset.action, file = allFiles.find(f => f.id === btn.dataset.id);
+                if (!file) return;
+                
+                if (action === 'download') handleDownload(file);
+                else if (action === 'delete' && confirm(`Excluir "${file.name}"?`)) handleDelete(file);
+                else if (action === 'share') handleShare(file);
+            });
+        }
 
-        elSearch.addEventListener('input', e => { searchTerm = e.target.value; renderFiles(); });
-        elFileInput.addEventListener('change', handleFileUpload);
+        if(elSearch) elSearch.addEventListener('input', e => { searchTerm = e.target.value; renderFiles(); });
+        if(elFileInput) elFileInput.addEventListener('change', handleFileUpload);
+
+        function handleShare(file) {
+            const shareUrl = `${window.location.origin}${window.location.pathname}?file=${file.id}`;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`Link copiado para a área de transferência com sucesso!\n\n${shareUrl}`);
+                }).catch(err => {
+                    prompt("Copie o link abaixo para compartilhar:", shareUrl);
+                });
+            } else {
+                prompt("Copie o link abaixo para compartilhar:", shareUrl);
+            }
+        }
 
         async function handleFileUpload(e) {
             const file = e.target.files[0];
@@ -255,6 +278,7 @@
 
         function setUploadUI(up, prog = 0) {
             const l = document.getElementById('uploadLabel'), p = document.getElementById('progressContainer');
+            if(!l || !p) return;
             if (up) {
                 l.className = "flex justify-center items-center space-x-2 w-full md:w-auto px-5 py-3 md:py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm bg-neutral-100 text-neutral-500 cursor-not-allowed";
                 document.getElementById('uploadIconDefault').classList.add('hidden');
@@ -270,12 +294,8 @@
             }
         }
 
-        // ==========================================
-        // CONFIGURAÇÃO REFORÇADA DE PWA (INSTALAÇÃO)
-        // ==========================================
         function setupPWA() {
             try {
-                // Manifesto configurado para usar a sua imagem (204913.png)
                 const manifest = {
                     name: "Repositório W.",
                     short_name: "Repo W",
@@ -286,14 +306,12 @@
                     icons: [{ src: "./204913.png", sizes: "192x192 512x512", type: "image/png", purpose: "any maskable" }]
                 };
                 
-                // Injeta o Manifesto no HTML
                 const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
                 const link = document.createElement('link');
                 link.rel = 'manifest';
                 link.href = URL.createObjectURL(manifestBlob);
                 document.head.appendChild(link);
 
-                // Injeta um Service Worker Mínimo (Necessário para PWA)
                 const swCode = `
                     self.addEventListener('install', (e) => self.skipWaiting());
                     self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
@@ -301,35 +319,120 @@
                 `;
                 const swBlob = new Blob([swCode], { type: 'application/javascript' });
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-                    .catch(err => console.log("Nota: O Service Worker requer um servidor web HTTP/HTTPS para rodar.", err));
+                    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
                 }
-            } catch (e) {
-                console.log("Ambiente não suporta injeção de PWA.");
-            }
+            } catch (e) {}
 
-            // Captura o evento nativo de Instalação (só dispara em servidores HTTPS ou localhost)
             window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault(); // Previne o comportamento padrão (mini-info bar)
-                deferredPrompt = e; // Guarda o evento
-                elBtnInstall.classList.remove('hidden');
-                elBtnInstall.classList.add('flex'); // Mostra o botão no cabeçalho
+                e.preventDefault(); 
+                deferredPrompt = e;
+                if(elBtnInstall) {
+                    elBtnInstall.classList.remove('hidden');
+                    elBtnInstall.classList.add('flex');
+                }
             });
 
-            // Quando clica no botão "Instalar App"
-            elBtnInstall.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt(); // Mostra o pop-up nativo de instalação
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        elBtnInstall.classList.add('hidden'); // Esconde se foi aceito
-                        elBtnInstall.classList.remove('flex');
+            if(elBtnInstall) {
+                elBtnInstall.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            elBtnInstall.classList.add('hidden');
+                            elBtnInstall.classList.remove('flex');
+                        }
+                        deferredPrompt = null;
                     }
-                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DE VISUALIZAÇÃO DE ARQUIVO COMPARTILHADO
+        // ==========================================
+        async function loadSharedFile(fileId) {
+            // Oculta área de usuário (matrícula)
+            document.getElementById('userHeaderInfo').classList.add('hidden');
+
+            const main = document.getElementById('mainContent');
+            main.innerHTML = `
+                <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 p-6 md:p-8 text-center mt-4 md:mt-10">
+                    <div id="sharedContent">
+                        <svg class="w-10 h-10 animate-spin text-neutral-800 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="6"/><line x1="12" x2="12" y1="18" y2="22"/><line x1="4.93" x2="7.76" y1="4.93" y2="7.76"/><line x1="16.24" x2="19.07" y1="16.24" y2="19.07"/><line x1="2" x2="6" y1="12" y2="12"/><line x1="18" x2="22" y1="12" y2="12"/><line x1="4.93" x2="7.76" y1="19.07" y2="16.24"/><line x1="16.24" x2="19.07" y1="7.76" y2="4.93"/></svg>
+                        <p class="text-slate-500 font-medium">Buscando arquivo compartilhado...</p>
+                    </div>
+                    <a href="${window.location.pathname}" class="mt-8 inline-block text-sm text-neutral-400 hover:text-neutral-800 transition">← Acessar Meu Repositório</a>
+                </div>
+            `;
+
+            onAuthStateChanged(auth, async user => {
+                if (!user) {
+                    try { await signInAnonymously(auth); } 
+                    catch (err) { document.getElementById('sharedContent').innerHTML = "<p class='text-red-500'>Erro de autenticação.</p>"; return; }
+                    return; // Retorna para aguardar o próximo disparo do listener
+                }
+                
+                try {
+                    const docRef = doc(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', fileId);
+                    const docSnap = await getDoc(docRef);
+                    
+                    if (!docSnap.exists()) {
+                        document.getElementById('sharedContent').innerHTML = `
+                            <svg class="w-16 h-16 text-slate-200 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <p class="text-red-500 font-bold text-lg">Arquivo não encontrado</p>
+                            <p class="text-slate-500 text-sm mt-2">O link pode estar quebrado ou o arquivo foi removido do repositório.</p>`;
+                        return;
+                    }
+                    
+                    const file = { id: docSnap.id, ...docSnap.data() };
+                    
+                    document.getElementById('sharedContent').innerHTML = `
+                        <p class="font-bold text-xl text-neutral-800 break-all mb-1">${file.name}</p>
+                        <p class="text-sm text-slate-500 mb-6">Tamanho: ${formatBytes(file.size)}</p>
+                        <div id="mediaContainer" class="mb-6 flex justify-center w-full bg-slate-50 rounded-lg p-2 min-h-[100px] items-center border border-slate-100 overflow-hidden">
+                            <p class="text-slate-400 text-sm animate-pulse">Carregando conteúdo do arquivo...</p>
+                        </div>
+                        <button id="btnDownloadShared" class="w-full md:w-auto px-8 py-3 bg-neutral-900 text-white rounded-lg font-bold hover:bg-black transition-all shadow-md flex items-center justify-center space-x-2 mx-auto">
+                            ${icons.download} <span>Baixar Arquivo</span>
+                        </button>
+                    `;
+
+                    // Puxa os chunks para renderizar direto na tela ou fazer o download
+                    const snap = await getDocs(collection(db, 'artifacts', appIdString, 'public', 'data', 'repository_files', file.id, 'chunks'));
+                    const chunks = snap.docs.map(d => d.data()).sort((a, b) => a.index - b.index);
+                    const dataUrl = chunks.map(c => c.data).join('');
+
+                    const mediaContainer = document.getElementById('mediaContainer');
+                    
+                    // Renderiza imagem e vídeo diretamente para quem tem o link
+                    if (file.type.startsWith('image/')) {
+                        mediaContainer.innerHTML = `<img src="${dataUrl}" class="max-h-[60vh] object-contain rounded" alt="${file.name}">`;
+                    } else if (file.type.startsWith('video/')) {
+                        mediaContainer.innerHTML = `<video src="${dataUrl}" controls class="max-h-[60vh] w-full rounded outline-none"></video>`;
+                    } else if (file.type.startsWith('audio/')) {
+                        mediaContainer.innerHTML = `<audio src="${dataUrl}" controls class="w-full"></audio>`;
+                    } else {
+                        mediaContainer.innerHTML = `<div class="p-8 text-slate-400 transform scale-150">${getFileIcon(file.type)}</div>`;
+                    }
+
+                    document.getElementById('btnDownloadShared').onclick = () => {
+                        const link = document.createElement('a');
+                        link.href = dataUrl; 
+                        link.download = file.name;
+                        document.body.appendChild(link); 
+                        link.click(); 
+                        document.body.removeChild(link);
+                    };
+
+                } catch (err) {
+                    document.getElementById('sharedContent').innerHTML = "<p class='text-red-500'>Erro ao carregar os dados do arquivo.</p>";
                 }
             });
         }
 
+        // ==========================================
+        // INICIALIZAÇÃO E ROTAS (LINK VS REPOSITÓRIO)
+        // ==========================================
         async function initApp() {
             setupPWA();
             onAuthStateChanged(auth, user => {
@@ -345,7 +448,16 @@
             catch (err) { showError("Ative o login Anônimo no Firebase."); }
         }
 
-        initApp();
+        // Verifica se é um acesso de link compartilhado
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedFileId = urlParams.get('file');
+
+        if (sharedFileId) {
+            setupPWA();
+            loadSharedFile(sharedFileId);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
